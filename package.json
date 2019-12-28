@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "nodemon -L --exec ts-node src/server.ts",
     "debug": "node --inspect -r ts-node/register src/server.ts"
   },
@@ -12,7 +12,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/mongodb": "^3.3.14",
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -25,12 +24,17 @@
     "typescript": "^3.7.4"
   },
   "devDependencies": {
+    "@types/mongodb": "^3.3.14",
     "@types/body-parser": "^1.17.1",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.2",
     "@types/jest": "^24.0.25",
     "@types/node": "^13.1.1",
     "@types/nodemon": "^1.19.0",
-    "jest": "^24.9.0"
+    "@types/supertest": "^2.0.8",
+    "jest": "^24.9.0",
+    "moq.ts": "^3.0.0",
+    "supertest": "^4.0.2",
+    "ts-jest": "^24.2.0"
   }
 }
