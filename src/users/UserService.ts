@@ -11,7 +11,7 @@ import { TYPES } from "../types";
 @injectable()
 export class UserService implements IUserService<string> {
 
-  private repository: CrudRepository<User, ObjectId>;
+  private repository: CrudRepository<User, string>;
 
   constructor(@inject(TYPES.UserRepository) userRepository: UserRepository) {
     this.repository = userRepository;
@@ -29,18 +29,18 @@ export class UserService implements IUserService<string> {
 
   public async findById(id: string): Promise<User> {
     const objId: ObjectId = new ObjectId(id);
-    const user: User | undefined = await this.repository.findById(objId);
+    const user: User | undefined = await this.repository.findById(objId.toHexString());
     if(!user) { throw new EntityNotFoundError(User.name, id); }
     return user;
   }
 
-  public async delete(id: string): Promise<ObjectId> {
+  public async delete(id: string): Promise<string> {
     const objId: ObjectId = new ObjectId(id);
-    return await this.repository.delete(objId);
+    return await this.repository.delete(objId.toHexString());
   }
 
   public async update(id: string, updates: User): Promise<User> {
     const objId: ObjectId = new ObjectId(id);
-    return await this.repository.update(objId, updates);
+    return await this.repository.update(objId.toHexString(), updates);
   }
 }

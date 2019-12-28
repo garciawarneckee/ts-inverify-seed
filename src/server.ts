@@ -25,7 +25,7 @@ container
   .inSingletonScope();
 
 container
-  .bind<CrudRepository<User, ObjectId>>(TYPES.UserRepository)
+  .bind<CrudRepository<User, string>>(TYPES.UserRepository)
   .to(UserRepository)
   .inSingletonScope();
 

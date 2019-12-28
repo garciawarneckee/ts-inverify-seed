@@ -6,7 +6,8 @@ import { CrudRepository } from './CrudRepository';
 import { Entity } from '../../domain/Entity';
 
 @injectable()
-export default abstract class InMemoryRepository<T extends Entity<ID>, ID> implements CrudRepository<T, ID> {
+export default abstract class InMemoryRepository<T extends Entity<ID>, ID>
+  implements CrudRepository<T, ID> {
 
   private dbClient: DbClient;
   private db: Map<ID, T>;

@@ -5,6 +5,6 @@ import User from "../domain/User";
 import InMemoryRepository from "../core/interfaces/InMemoryRepository";
 
 @injectable()
-export default class UserRepository extends InMemoryRepository<User, ObjectId> {
+export default class UserRepository extends InMemoryRepository<User, string> {
 
 }

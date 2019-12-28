@@ -33,7 +33,8 @@ export class UserController implements CrudController {
 
   @httpGet("/")
   public async findAll(req: Request, res: Response): Promise<void> {
-    throw new Error("Method not implemented.");
+    const users: User[] = await this.service.findAll();
+    res.status(HttpCodes.OK).send({ users });
   }
 
   @httpGet("/:id")

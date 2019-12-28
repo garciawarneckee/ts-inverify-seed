@@ -1,15 +1,15 @@
 import { ObjectId } from "mongodb";
 import { Entity } from './Entity';
 
-export default class User implements Entity<ObjectId> {
+export default class User implements Entity<string> {
 
-  private id: ObjectId;
+  private id: string;
   private firstName: string | undefined;
   private lastName: string | undefined;
   private birthDate: number | undefined;
 
   constructor(firstName?: string, lastName?: string, birthDate?: number) {
-    this.id = new ObjectId();
+    this.id = new ObjectId().toHexString();
     this.firstName = firstName;
     this.lastName = lastName;
     this.birthDate = birthDate;
@@ -27,7 +27,7 @@ export default class User implements Entity<ObjectId> {
     return new User(firtName, lastName, birthDate);
   }
 
-  public getId(): ObjectId {
+  public getId(): string {
     return this.id;
   }
 
