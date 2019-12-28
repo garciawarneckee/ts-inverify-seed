@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
 
-import { TYPES } from './../types';
-import { DbClient } from './../db-clients/DbClient';
+import { TYPES } from '../../types';
+import { DbClient } from '../db-clients/DbClient';
 import { CrudRepository } from './CrudRepository';
-import { Entity } from './Entity';
+import { Entity } from '../../domain/Entity';
 
 @injectable()
 export default abstract class InMemoryRepository<T extends Entity<ID>, ID> implements CrudRepository<T, ID> {
@@ -24,9 +24,8 @@ export default abstract class InMemoryRepository<T extends Entity<ID>, ID> imple
     return Array.from(this.db.values());
   }
 
-  public async findById(id: ID): Promise<T> {
+  public async findById(id: ID): Promise<T | undefined> {
     const entity: T | undefined = this.db.get(id);
-    if(!entity) { throw new Error("Resource not found") }
     return entity;
   }
 
@@ -37,6 +36,7 @@ export default abstract class InMemoryRepository<T extends Entity<ID>, ID> imple
 
   public async update(id: ID, updates: T): Promise<T> {
     const entity = await this.findById(id);
+    if(!entity) { throw new Error("Resource not found"); }
     const updatedEntity = { ...entity, updates };
     this.db.set(entity.getId(), updatedEntity);
     return updatedEntity;
