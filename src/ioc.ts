@@ -1,7 +1,9 @@
+import { IRequestValidator } from './core/interfaces/RequestValidator';
 import { Container } from "inversify";
 
 import { CrudRepository } from "./core/interfaces/CrudRepository";
 import { CrudController } from "./core/interfaces/CrudController";
+import RequestValidator from './core/requests/RequestValidator';
 import { IUserService } from "./users/interfaces/IUserService";
 import MockDbClient from "./core/db-clients/MockDbClient";
 import { UserController } from "./users/UserController";
@@ -32,6 +34,11 @@ container
 container
   .bind<CrudController>(TYPES.UserController)
   .to(UserController)
+  .inSingletonScope();
+
+container
+  .bind<IRequestValidator>(TYPES.RequestValidator)
+  .to(RequestValidator)
   .inSingletonScope();
 
 container

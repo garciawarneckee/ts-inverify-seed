@@ -1,6 +1,8 @@
+import { CreateUserRequest } from './requests/CreateUserRequest';
 import { Router, Request, Response } from "express";
-import { inject } from "inversify";
+import { inject, injectable } from "inversify";
 
+import { IRequestValidator } from "../core/interfaces/RequestValidator";
 import { CrudController } from "../core/interfaces/CrudController";
 import { IUserService } from "./interfaces/IUserService";
 import ErrorBuilder from "../core/errors/ErrorBuilder";
@@ -8,16 +10,21 @@ import { HttpCodes } from "./../core/enums/HttpCodes";
 import User from "../domain/User";
 import { TYPES } from "../types";
 
+@injectable()
 export class UserController implements CrudController {
 
   private service: IUserService<string>;
+  private validator: IRequestValidator;
   private errorBuilder: ErrorBuilder;
+
   private router: Router;
 
   constructor(
+    @inject(TYPES.RequestValidator) validator: IRequestValidator,
     @inject(TYPES.UserService) service: IUserService<string>,
     @inject(TYPES.ErrorBuilder) errorBuilder: ErrorBuilder,
   ) {
+    this.validator = validator;
     this.service = service;
     this.errorBuilder = errorBuilder;
     this.router = this.initRoutes(Router());
@@ -28,9 +35,15 @@ export class UserController implements CrudController {
   }
 
   public async create(req: Request, res: Response): Promise<void> {
-    const { firstName, lastName, birthDate } = req.body;
-    const newUser: User = await this.service.create(firstName, lastName, birthDate);
-    res.status(HttpCodes.CREATED).send({ user: newUser });
+    try {
+      this.validator.validate(req.body, CreateUserRequest);
+      const { firstName, lastName, birthDate } = req.body;
+      const newUser: User = await this.service.create(firstName, lastName, birthDate);
+      res.status(HttpCodes.CREATED).send({ user: newUser });
+    } catch(error) {
+      const code = this.errorBuilder.build(error);
+      res.status(code).json({ error: error.message });
+    }
   }
 
   public async findAll(req: Request, res: Response): Promise<void> {
@@ -58,11 +71,11 @@ export class UserController implements CrudController {
   }
 
   private initRoutes(router: Router): Router {
-    router.post("/", this.create);
-    router.get("/", this.findAll);
-    router.get("/:id", this.findById);
-    router.delete("/:id", this.delete);
-    router.put("/:id", this.update);
+    router.post("/", this.create.bind(this));
+    router.get("/", this.findAll.bind(this));
+    router.get("/:id", this.findById.bind(this));
+    router.delete("/:id", this.delete.bind(this));
+    router.put("/:id", this.update.bind(this));
     return router;
   }
 

@@ -8,4 +8,5 @@ export const TYPES = {
   UserService: Symbol.for("UserService"),
   UserController: Symbol.for("UserController"),
   ErrorBuilder: Symbol.for("ErrorBuilder"),
+  RequestValidator: Symbol.for("RequestValidator"),
 }
