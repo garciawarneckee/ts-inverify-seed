@@ -1,7 +1,9 @@
+//WHY?
+import "reflect-metadata";
 import { injectable } from "inversify";
 
 import { NotValidKeyTypeError, NotValidKeyError, NotRequiredKeysError } from "../errors";
-import { IRequestValidator } from './../interfaces/RequestValidator';
+import { IRequestValidator } from '../interfaces/IRequestValidator';
 import { RequestSchema } from "./RequestSchema";
 
 @injectable()

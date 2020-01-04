@@ -1,5 +1,6 @@
-import { CreateUserRequest } from './../../../src/users/requests/CreateUserRequest';
+import { CreateUserRequest } from "./../../../src/users/requests/CreateUserRequest";
 import RequestValidator from "../../../src/core/requests/RequestValidator";
+import { RequestSchema } from "../../../src/core/requests/RequestSchema";
 
 describe("RequestValidator", () => {
 
@@ -11,9 +12,41 @@ describe("RequestValidator", () => {
       expect(() => validator.validate(request, CreateUserRequest)).not.toThrow();
     });
 
+    it("should not throw when a request has a nested object in it", () => {
+      const request = { firstName: "testFirst", phone: { prefix: 34, number: 111111111 } };
+      const phoneSchema: RequestSchema = {
+        firstName: { type: "string", required: true },
+        phone: {
+          type: "object",
+          required: true,
+          properties: {
+            prefix: { type: "number", required: true },
+            number: { type: "number", required: true }
+          },
+        },
+      }
+      expect(() => validator.validate(request, phoneSchema)).not.toThrow();
+    });
+
+    it("should throw when a request has a nested object in it and it doesn't meet the required keys", () => {
+      const request = { firstName: "testFirst", phone: { prefix: 34 } };
+      const phoneSchema: RequestSchema = {
+        firstName: { type: "string", required: true },
+        phone: {
+          type: "object",
+          required: true,
+          properties: {
+            prefix: { type: "number", required: true },
+            number: { type: "number", required: true }
+          },
+        },
+      }
+      expect(() => validator.validate(request, phoneSchema)).not.toThrow();
+    });
+
     it("should throw a NotRequiredKeysError when a request miss some required key", () => {
       const request = { firstName: "testFirst", lastName: "testLast" };
-      expect(() => validator.validate(request, CreateUserRequest)).toThrow(`Keys birthDate are not present for the request ${JSON.stringify(request)}`);
+      expect(() => validator.validate(request, CreateUserRequest)).toThrow(`Keys birthDate are not present in the request ${JSON.stringify(request)}`);
     });
 
     it("should throw a NotValidKeyTypeError when a required key in payload hasn't the correct type", () => {

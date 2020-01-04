@@ -2,7 +2,7 @@ import { CreateUserRequest } from './requests/CreateUserRequest';
 import { Router, Request, Response } from "express";
 import { inject, injectable } from "inversify";
 
-import { IRequestValidator } from "../core/interfaces/RequestValidator";
+import { IRequestValidator } from "../core/interfaces/IRequestValidator";
 import { CrudController } from "../core/interfaces/CrudController";
 import { IUserService } from "./interfaces/IUserService";
 import ErrorBuilder from "../core/errors/ErrorBuilder";

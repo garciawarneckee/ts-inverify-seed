@@ -1,4 +1,4 @@
-import { IRequestValidator } from './core/interfaces/RequestValidator';
+import { IRequestValidator } from './core/interfaces/IRequestValidator';
 import { Container } from "inversify";
 
 import { CrudRepository } from "./core/interfaces/CrudRepository";

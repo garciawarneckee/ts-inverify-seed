@@ -8,7 +8,7 @@ export class EntityNotFoundError extends Error {
 export class NotRequiredKeysError extends Error {
   constructor(payload: any, missingKeys: string[]) {
     super();
-    this.message = `Keys ${missingKeys.join(",")} are not present for the request ${JSON.stringify(payload)}`;
+    this.message = `Keys ${missingKeys.join(",")} are not present in the request ${JSON.stringify(payload)}`;
   }
 }
 
