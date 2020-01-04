@@ -41,7 +41,7 @@ describe("RequestValidator", () => {
           },
         },
       }
-      expect(() => validator.validate(request, phoneSchema)).not.toThrow();
+      expect(() => validator.validate(request, phoneSchema)).toThrow(`Keys number are not present in the request {\"prefix\":34}`);
     });
 
     it("should throw a NotRequiredKeysError when a request miss some required key", () => {

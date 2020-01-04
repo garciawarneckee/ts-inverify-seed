@@ -14,6 +14,23 @@ export default class RequestValidator implements IRequestValidator {
     const payloadKeys = Object.keys(payload);
     const schemaKeys = Object.keys(schema);
 
+    const nestedObjects: RequestSchema = {}
+    schemaKeys.forEach((sk) => {
+      if(schema[sk].type === "object") {
+        this.validatePlainObject(payload[sk], schema[sk].properties!);
+        nestedObjects[sk] = schema[sk];
+        delete payload[sk];
+        delete schema[sk];
+      }
+    });
+
+    this.validatePlainObject(payload, schema);
+  }
+
+  private validatePlainObject(payload: any, schema: RequestSchema) {
+    const payloadKeys = Object.keys(payload);
+    const schemaKeys = Object.keys(schema);
+
     const requiredKeys: string[] = schemaKeys.filter((sk) => schema[sk].required === true);
     const optionalKeys: string[] = schemaKeys.filter((sk) => schema[sk].required === false);
     const optionalAndNonValidKeys: string[] = payloadKeys.filter(x => !requiredKeys.includes(x));
