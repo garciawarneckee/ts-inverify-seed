@@ -10,7 +10,6 @@ import { RequestSchema } from "./RequestSchema";
 export default class RequestValidator implements IRequestValidator {
 
   public validate(payload: any, schema: RequestSchema): void {
-
     const payloadKeys = Object.keys(payload);
     const schemaKeys = Object.keys(schema);
 
@@ -21,6 +20,9 @@ export default class RequestValidator implements IRequestValidator {
         nestedObjects[sk] = schema[sk];
         delete payload[sk];
         delete schema[sk];
+      }
+      if(schema[sk].type === "array") {
+        //TODO...
       }
     });
 

@@ -28,6 +28,39 @@ describe("RequestValidator", () => {
       expect(() => validator.validate(request, phoneSchema)).not.toThrow();
     });
 
+    it("should not throw when a request has more than one nested object in it", () => {
+      const request = { 
+        firstName: "testFirst", 
+        phone: { prefix: 34, number: 111111111 },
+        address: { 
+          street: "Some street",
+          number: 34,
+          city: "Barcelona"
+        }
+      };
+      const complexSchema: RequestSchema = {
+        firstName: { type: "string", required: true },
+        phone: {
+          type: "object",
+          required: true,
+          properties: {
+            prefix: { type: "number", required: true },
+            number: { type: "number", required: true }
+          },
+        },
+        address: {
+          type: "object",
+          required: true,
+          properties: {
+            street: { type: "string", required: true },
+            number: { type: "number", required: true },
+            city: { type: "string", required: true },
+          }
+        }
+      }
+      expect(() => validator.validate(request, complexSchema)).not.toThrow();
+    });
+
     it("should throw when a request has a nested object in it and it doesn't meet the required keys", () => {
       const request = { firstName: "testFirst", phone: { prefix: 34 } };
       const phoneSchema: RequestSchema = {
