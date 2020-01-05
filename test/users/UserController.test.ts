@@ -6,11 +6,11 @@ import { ObjectId } from "mongodb";
 import supertest from "supertest";
 import express, { Application } from "express";
 
-import { IRequestValidator } from "./../../src/core/interfaces/RequestValidator";
+import { IRequestValidator } from "../../src/core/interfaces/IRequestValidator";
 import { IUserService } from "./../../src/users/interfaces/IUserService";
 import RequestValidator from "../../src/core/requests/RequestValidator";
-import { NotValidKeyTypeError } from "./../../src/core/errors/index";
 import { UserController } from "./../../src/users/UserController";
+import { NotValidKeyTypeError } from "./../../src/core/errors";
 import ErrorBuilder from "../../src/core/errors/ErrorBuilder";
 import { HttpCodes } from "./../../src/core/enums/HttpCodes";
 import { UserService } from "./../../src/users/UserService";
@@ -24,7 +24,7 @@ let app: Application;
 function runServer() {
   const requestValidator = requestValidatorMock.prototypeof(RequestValidator.prototype).object();
   const service = serviceMock.prototypeof(UserService.prototype).object();
-  const errorBuilder = errorBuilderMock.prototypeof(ErrorBuilder.prototype).object();
+  const errorBuilder = new ErrorBuilder();
 
   app = express();
   const userController = new UserController(requestValidator, service, errorBuilder);
@@ -80,7 +80,7 @@ describe("UserController", () => {
         .set("Content-Type", "application/json")
         .send(payload)
         .expect(HttpCodes.BAD_REQUEST)
-        .expect("Key firstName has an invalid type it is expected to have string type")
+        .expect({ error: "Key firstName has an invalid type it is expected to have string type" })
         .end((err) => {
           if (err) return done(err);
           done();
