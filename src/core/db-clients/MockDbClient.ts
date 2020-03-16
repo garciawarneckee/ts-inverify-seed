@@ -1,5 +1,5 @@
-import { DbClient } from './DbClient';
-import { injectable } from 'inversify';
+import { DbClient } from "./DbClient";
+import { injectable } from "inversify";
 
 @injectable()
 export default class MockDbClient implements DbClient {

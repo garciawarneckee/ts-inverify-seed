@@ -5,8 +5,7 @@ import { HttpCodes } from './../enums/HttpCodes';
 export default class ErrorBuilder {
 
   public build(error: Error): number {
-    console.log("Entering error builder with", error.name);
-    switch(error.name) {
+    switch(error.constructor.name) {
       case "NotRequiredKeysError":
       case "NotValidKeyError":
       case "NotValidKeyTypeError":

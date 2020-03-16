@@ -28,6 +28,143 @@ describe("RequestValidator", () => {
       expect(() => validator.validate(request, phoneSchema)).not.toThrow();
     });
 
+    it("should not throw when a request has more than one nested object in it", () => {
+      const request = {
+        firstName: "testFirst",
+        phone: { prefix: 34, number: 111111111 },
+        address: {
+          street: "Some street",
+          number: 34,
+          city: "Barcelona"
+        }
+      };
+      const complexSchema: RequestSchema = {
+        firstName: { type: "string", required: true },
+        phone: {
+          type: "object",
+          required: true,
+          properties: {
+            prefix: { type: "number", required: true },
+            number: { type: "number", required: true }
+          },
+        },
+        address: {
+          type: "object",
+          required: true,
+          properties: {
+            street: { type: "string", required: true },
+            number: { type: "number", required: true },
+            city: { type: "string", required: true },
+          }
+        }
+      }
+      expect(() => validator.validate(request, complexSchema)).not.toThrow();
+    });
+
+    it("should not throw when the payload has a primitive array", () => {
+      const payload: any = { countries: ["Argentina", "Spain", "Belgium"] };
+      const schema: RequestSchema = {
+        countries: {
+          type: "array",
+          required: true,
+          items: {
+            of: "string",
+          }
+        }
+      };
+      expect(() => validator.validate(payload, schema)).not.toThrow();
+    });
+
+    it("should not throw when the payload has an object array", () => {
+      const payload: any = {
+        users: [
+          {
+            firstName: "firstName1",
+            lastName: "lastName1",
+          },
+          {
+            firstName: "firstName2",
+            lastName: "lastName2",
+          },
+          {
+            firstName: "firstName3",
+            lastName: "lastName3",
+          },
+        ]
+      };
+      const schema: RequestSchema = {
+        users: {
+          type: "array",
+          required: true,
+          items: {
+            of: "object",
+            schema: {
+              firstName: { type: "string", required: true },
+              lastName: { type: "string", required: true },
+            }
+          }
+        }
+      };
+      expect(() => validator.validate(payload, schema)).not.toThrow();
+    });
+
+    it("should not throw when the payload has an complex payload", () => {
+      const payload: any = {
+        total: 200.3,
+        products: [
+          {
+            name: "product1",
+            price: 150.3,
+          },
+          {
+            name: "product2",
+            price: 50,
+          }
+        ],
+        client: {
+          name: "client",
+          identification: 37184217,
+          country: "Argentina",
+          address: {
+            street: "Some street",
+            number: 34,
+          }
+        }
+      };
+      const schema: RequestSchema = {
+        total: { type: "number", required: true },
+        products: {
+          type: "array",
+          required: true,
+          items: {
+            of: "object",
+            schema: {
+              name: { type: "string", required: true },
+              price: { type: "number", required: true },
+            }
+          }
+        },
+        client: {
+          type: "object",
+          required: true,
+          properties: {
+            name: { type: "string", required: true },
+            identification: { type: "number", required: true },
+            country: { type: "string", required: true },
+            address: {
+              type: "object",
+              required: true,
+              properties: {
+                street: { type: "string", required: true },
+                number: { type: "number", required: true },
+              }
+            }
+          }
+        }
+      };
+      expect(() => validator.validate(payload, schema)).not.toThrow();
+    });
+
     it("should throw when a request has a nested object in it and it doesn't meet the required keys", () => {
       const request = { firstName: "testFirst", phone: { prefix: 34 } };
       const phoneSchema: RequestSchema = {
