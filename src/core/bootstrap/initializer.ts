@@ -12,7 +12,7 @@ export default class Initiliazer {
 
   private static readonly instance: Initiliazer;
 
-  private container: Container;
+  private container: Container = new Container();
 
   private constructor() {
     
