@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 
 import { CrudRepository } from "./CrudRepository";
-import { DbClient } from "../db-clients/DbClient";
+import { DbClient } from "../dbs/DbClient";
 import { Entity } from "../../domain/Entity";
 import { TYPES } from "../../types";
 
